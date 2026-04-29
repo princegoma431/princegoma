@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Prince Goma | Portfolio Cybersécurité</title>
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0c12;
+            color: #eef5ff;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Arrière-plan animé cybersécurité */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 30% 20%, #0a0f1f, #020408);
+        }
+
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .overlay-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.25);
+            backdrop-filter: blur(1.5px);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 4rem;
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Hero section avec photo téléchargeable */
+        .hero {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            background: rgba(8, 14, 26, 0.7);
+            backdrop-filter: blur(14px);
+            border-radius: 2.5rem;
+            padding: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.25);
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.6);
+            transition: all 0.2s;
+        }
+
+        .photo-section {
+            flex: 0.8;
+            min-width: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+
+        .photo-frame {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: #0e1a2a;
+            border: 3px solid #0ff;
+            box-shadow: 0 0 20px rgba(0,255,255,0.3);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(145deg, #11223b, #051020);
+            color: #0ff;
+            font-size: 3rem;
+        }
+
+        .btn-upload {
+            background: rgba(0, 255, 255, 0.15);
+            border: 1px solid #0ff;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #bbffff;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-upload:hover {
+            background: rgba(0, 255, 255, 0.35);
+            transform: scale(1.02);
+        }
+
+        .info-perso {
+            flex: 2;
+        }
+
+        .info-perso h1 {
+            font-size: 2.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff, #7bc5ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .badge-age {
+            background: #0a1a2f;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-left: 3px solid #0ff;
+            margin: 0.7rem 0;
+        }
+
+        .contact-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            margin-top: 0.8rem;
+        }
+
+        .contact-item {
+            background: rgba(0, 30, 50, 0.7);
+            border-radius: 50px;
+            padding: 0.5rem 1.2rem;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(0,255,255,0.2);
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            color: #eef5ff;
+        }
+        
+        .contact-item:hover {
+            background: rgba(0, 80, 110, 0.8);
+            border-color: #0ff;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,255,255,0.2);
+        }
+
+        .contact-item i {
+            color: #0ff;
+            width: 1.2rem;
+            font-size: 1rem;
+        }
+        
+        /* Lien LinkedIn spécial */
+        .linkedin-link {
+            cursor: pointer;
+        }
+
+        /* Onglets */
+        .tabs-container {
+            background: rgba(6, 12, 22, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.8rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            overflow: hidden;
+        }
+
+        .tabs-header {
+            display: flex;
+            gap: 0.2rem;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 0.5rem 1rem 0;
+            border-bottom: 1px solid rgba(0,255,200,0.3);
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 0.9rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #b8d0e9;
+            cursor: pointer;
+            transition: 0.2s;
+            border-radius: 1.2rem 1.2rem 0 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: inherit;
+        }
+
+        .tab-btn i {
+            font-size: 1.1rem;
+            color: #5bc0ff;
+        }
+
+        .tab-btn.active {
+            background: rgba(0, 255, 255, 0.12);
+            color: #0ff;
+            border-bottom: 2px solid #0ff;
+            text-shadow: 0 0 5px rgba(0,255,255,0.3);
+        }
+
+        .tab-content {
+            display: none;
+            padding: 1.8rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        .exp-item, .formation-item {
+            background: rgba(0, 20, 40, 0.5);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            margin-bottom: 1.2rem;
+            border-left: 4px solid #0ff;
+            transition: 0.2s;
+        }
+
+        .exp-title, .formation-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .exp-date, .formation-date {
+            font-size: 0.75rem;
+            background: #0a2a3a;
+            padding: 0.2rem 0.7rem;
+            border-radius: 30px;
+            color: #aaf0ff;
+        }
+
+        .exp-desc, .formation-desc {
+            margin-top: 0.6rem;
+            font-size: 0.9rem;
+            color: #ccdeff;
+        }
+
+        /* grille compétences + projets */
+        .two-columns {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 2rem;
+            margin-top: 1.2rem;
+        }
+
+        .card {
+            background: rgba(8, 14, 26, 0.7);
+            backdrop-filter: blur(12px);
+            border-radius: 1.8rem;
+            padding: 1.7rem;
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            margin-bottom: 1.5rem;
+            transition: 0.2s;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            border-left: 4px solid #0ff;
+            padding-left: 1rem;
+        }
+
+        .skill-tag {
+            background: rgba(0, 255, 255, 0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            display: inline-block;
+            margin: 0.3rem 0.4rem;
+            font-size: 0.85rem;
+            border: 1px solid rgba(0,255,200,0.3);
+        }
+
+        .project-item, .lang-item {
+            background: rgba(0, 0, 0, 0.35);
+            border-radius: 1.2rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid #0ff;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.8rem;
+            color: #9aaec0;
+            background: rgba(0,0,0,0.4);
+            border-radius: 2rem;
+            padding: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .two-columns { grid-template-columns: 1fr; }
+            .hero { flex-direction: column; align-items: center; text-align: center; }
+            .contact-grid { justify-content: center; }
+            .tab-btn { padding: 0.7rem 1rem; font-size: 0.9rem; }
+        }
+
+        a { color: #b3f0ff; text-decoration: none; }
+        hr { border-color: #2a3a66; margin: 1rem 0; }
+        input[type="file"] { display: none; }
+        
+        /* Effet de clic */
+        .clickable {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div class="cyber-bg"></div>
+<canvas id="matrixCanvas"></canvas>
+<div class="overlay-texture"></div>
+
+<div class="container">
+    <!-- Section HERO avec photo téléchargeable + contacts cliquables -->
+    <div class="hero">
+        <div class="photo-section">
+            <div class="photo-frame" id="photoFrame" onclick="document.getElementById('photoUpload').click()">
+                <img id="profileImage" src="" alt="Photo de profil" style="display: none;">
+                <div id="placeholderIcon" class="photo-placeholder">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+            </div>
+            <input type="file" id="photoUpload" accept="image/jpeg,image/png,image/jpg" style="display: none;">
+            <label for="photoUpload" class="btn-upload"><i class="fas fa-upload"></i> Télécharger ma photo</label>
+            <small style="font-size: 0.7rem; opacity:0.7;">Cliquez sur l'icône ou le bouton</small>
+        </div>
+        <div class="info-perso">
+            <h1>Prince Goma</h1>
+            <div class="badge-age"><i class="fas fa-calendar-alt"></i> 24 ans · Bondy, 93140</div>
+            <div class="contact-grid">
+                <!-- Téléphone : lien tel pour appeler directement -->
+                <a href="tel:+33646294370" class="contact-item">
+                    <i class="fas fa-phone-alt"></i> 06 46 29 43 70
+                </a>
+                <!-- Email : lien mailto -->
+                <a href="mailto:princegoma431@gmail.com" class="contact-item">
+                    <i class="fas fa-envelope"></i> princegoma431@gmail.com
+                </a>
+                <!-- LinkedIn : lien externe avec nouvel onglet -->
+                <a href="https://www.linkedin.com/in/prince-goma-91a39b212/" target="_blank" rel="noopener noreferrer" class="contact-item linkedin-link">
+                    <i class="fab fa-linkedin"></i> @PrinceGoma
+                </a>
+                <!-- Adresse (non cliquable mais présente) -->
+                <span class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i> Bondy, 93140
+                </span>
+            </div>
+            <p style="margin-top: 1rem; font-size:0.95rem"><i class="fas fa-terminal" style="color:#0ff;"></i> Passionné par l'infrastructure sécurisée, AD & automatisation défensive. Curieux et rigoureux, je mets la cybersécurité au cœur de mes projets.</p>
+        </div>
+    </div>
+
+    <!-- Onglets cliquables : Expérience pro & Formations -->
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-btn active" data-tab="experience"><i class="fas fa-briefcase"></i> Expérience professionnelle</button>
+            <button class="tab-btn" data-tab="formation"><i class="fas fa-graduation-cap"></i> Formations & diplômes</button>
+        </div>
+        <div id="experience" class="tab-content active">
+            <div class="exp-item">
+                <div class="exp-title">
+                    <i class="fas fa-shield-haltered"></i> Technicien support & sécurité (Alternance / Stage)
+                    <span class="exp-date">2023 – 2024</span>
+                </div>
+                <div class="exp-desc">Administration Active Directory, création de GPO, assistance aux utilisateurs, sensibilisation à la sécurité. Participation à des audits mineurs et durcissement des postes Windows.</div>
+            </div>
+            <div class="exp-item">
+                <div class="exp-title">
+                    <i class="fas fa-network-wired"></i> Stagiaire infrastructure IT
+                    <span class="exp-date">2022 – 6 mois</span>
+                </div>
+                <div class="exp-desc">Déploiement de serveurs DHCP/DNS, segmentation réseau, rédaction de documentation technique et script Powershell pour l'inventaire des équipements.</div>
+            </div>
+            <div class="exp-item">
+                <div class="exp-title">
+                    <i class="fas fa-chart-line"></i> Projets personnels cybersécurité
+                    <span class="exp-date">2021 - Présent</span>
+                </div>
+                <div class="exp-desc">Analyse de vulnérabilités sur VM, création d'un labo Active Directory sécurisé, participation à des CTF en ligne (RootMe, HackTheBox).</div>
+            </div>
+        </div>
+        <div id="formation" class="tab-content">
+            <div class="formation-item">
+                <div class="formation-title">
+                    <i class="fas fa-laptop-code"></i> BTS SIO (Services Informatiques aux Organisations) option SISR
+                    <span class="formation-date">2021 - 2023</span>
+                </div>
+                <div class="formation-desc">Administration systèmes et réseaux, cybersécurité, virtualisation, gestion de projet. Réalisation d'un projet AD complet avec rapports de vulnérabilités.</div>
+            </div>
+            <div class="formation-item">
+                <div class="formation-title">
+                    <i class="fas fa-certificate"></i> Certification Cisco CCNA (en cours)
+                    <span class="formation-date">2024</span>
+                </div>
+                <div class="formation-desc">Fondamentaux réseaux, sécurité des infrastructures, routage et switching. Acquisition de compétences en segmentation et ACLs.</div>
+            </div>
+            <div class="formation-item">
+                <div class="formation-title">
+                    <i class="fas fa-shield-virus"></i> MOOC ANSSI - SecNum académie
+                    <span class="formation-date">2023</span>
+                </div>
+                <div class="formation-desc">Notions de cybersécurité, gestion de crise, analyse de risque et bonnes pratiques (recommandations ANSSI).</div>
+            </div>
+            <div class="formation-item">
+                <div class="formation-title">
+                    <i class="fas fa-microchip"></i> Formation complémentaire : PowerShell pour l'administration sécurisée
+                    <span class="formation-date">2024</span>
+                </div>
+                <div class="formation-desc">Automatisation des tâches, scripts d'audit, gestion de logs et monitoring actif.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Compétences / Projets -->
+    <div class="two-columns">
+        <div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-microchip"></i> Compétences techniques</div>
+                <div>
+                    <span class="skill-tag"><i class="fab fa-microsoft"></i> Active Directory, GPO, WDS</span>
+                    <span class="skill-tag"><i class="fas fa-chart-line"></i> Analyse vulnérabilités</span>
+                    <span class="skill-tag"><i class="fas fa-network-wired"></i> Segmentation réseau</span>
+                    <span class="skill-tag"><i class="fas fa-dhcp"></i> DHCP, DNS, IP</span>
+                    <span class="skill-tag"><i class="fas fa-terminal"></i> Automation (Powershell)</span>
+                    <span class="skill-tag"><i class="fas fa-shield-virus"></i> Rapports de failles</span>
+                    <span class="skill-tag"><i class="fas fa-tools"></i> Nmap, OpenVAS, Wireshark</span>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-language"></i> Langues</div>
+                <div class="lang-item"><div class="exp-title">Français <span style="font-size:0.8rem;">(C2 – Langue maternelle)</span></div><div class="exp-desc">Maîtrise native, rédaction technique.</div></div>
+                <div class="lang-item"><div class="exp-title">Anglais <span style="font-size:0.8rem;">(A2 – technique)</span></div><div class="exp-desc">Lecture de documentation technique et bases de communication.</div></div>
+                <div class="lang-item"><div class="exp-title">Espagnol <span style="font-size:0.8rem;">(A2)</span></div><div class="exp-desc">Notions élémentaires.</div></div>
+            </div>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-title"><i class="fas fa-project-diagram"></i> Projets techniques</div>
+                <div class="project-item"><div class="exp-title">📁 Active Directory local complet</div><div>Mise en place d'un contrôleur de domaine, GPO, délégation, WDS + hardening de base.</div></div>
+                <div class="project-item"><div class="exp-title">🌐 Réseau d’entreprise simulé</div><div>DHCP redondant, DNS, VLAN, DMZ virtuelle avec routage, simulation d'architecture sécurisée.</div></div>
+                <div class="project-item"><div class="exp-title">🔍 Analyse de vulnérabilités</div><div>Scan avec Nmap, OpenVAS ; identification de failles, correctifs recommandés.</div></div>
+                <div class="project-item"><div class="exp-title">📄 Rapports de failles & recommandations</div><div>Documentation détaillée, scores CVSS, plan de remédiation orienté métier.</div></div>
+                <div class="project-item"><div class="exp-title">⚙️ Automatisation Powershell</div><div>Scripts pour création d'utilisateurs AD, rotation de mots de passe, surveillance des logs de sécurité.</div></div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <i class="fas fa-shield-haltered"></i> Prince Goma – Portfolio dynamique | Disponible pour opportunités en cybersécurité / administration systèmes<br>
+        <span style="font-family: monospace;">“Audit, automatisation et résilience”</span>
+    </footer>
+</div>
+
+<script>
+    // ========== CANVAS MATRIX ANIMATION ==========
+    (function() {
+        const canvas = document.getElementById('matrixCanvas');
+        let ctx = canvas.getContext('2d');
+        let width, height, columns, drops;
+        const chars = "01アイウABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&:;<>?[]{}~";
+        let fontSize = 18;
+        
+        function resizeCanvas() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+            columns = Math.floor(width / fontSize);
+            drops = [];
+            for(let i=0; i<columns; i++) drops[i] = Math.floor(Math.random() * -height / fontSize);
+        }
+        
+        function draw() {
+            if(!ctx) return;
+            ctx.fillStyle = "rgba(5, 10, 20, 0.07)";
+            ctx.fillRect(0, 0, width, height);
+            ctx.font = `500 ${fontSize}px "Fira Code", monospace`;
+            for(let i=0; i<drops.length; i++) {
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
+                ctx.fillStyle = `rgba(0, ${180 + Math.sin(i)*40}, 230, 0.85)`;
+                if (Math.random() < 0.08) ctx.fillStyle = "#0ff";
+                ctx.fillText(char, x, y);
+                if(y > height && Math.random() > 0.975) drops[i] = 0;
+                drops[i] += 0.55;
+                if(drops[i] * fontSize > height && Math.random() > 0.98) drops[i] = 0;
+            }
+            requestAnimationFrame(draw);
+        }
+        
+        window.addEventListener('resize', () => { resizeCanvas(); });
+        resizeCanvas();
+        draw();
+    })();
+
+    // ========== GESTION PHOTO TÉLÉCHARGEABLE ==========
+    const photoUpload = document.getElementById('photoUpload');
+    const profileImage = document.getElementById('profileImage');
+    const placeholderIcon = document.getElementById('placeholderIcon');
+    
+    photoUpload.addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profileImage.src = e.target.result;
+                profileImage.style.display = 'block';
+                placeholderIcon.style.display = 'none';
+                localStorage.setItem('profilePhoto', e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    const savedPhoto = localStorage.getItem('profilePhoto');
+    if(savedPhoto) {
+        profileImage.src = savedPhoto;
+        profileImage.style.display = 'block';
+        placeholderIcon.style.display = 'none';
+    }
+    
+    document.getElementById('photoFrame').addEventListener('click', () => {
+        photoUpload.click();
+    });
+    
+    // ========== GESTION ONGLETS ==========
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    function activateTab(tabId) {
+        tabContents.forEach(content => {
+            content.classList.remove('active');
+            if(content.id === tabId) {
+                content.classList.add('active');
+            }
+        });
+        tabBtns.forEach(btn => {
+            btn.classList.remove('active');
+            if(btn.getAttribute('data-tab') === tabId) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const tabId = btn.getAttribute('data-tab');
+            if(tabId === 'experience') activateTab('experience');
+            if(tabId === 'formation') activateTab('formation');
+        });
+    });
+    
+    // Effet de survol sur les cartes
+    const cards = document.querySelectorAll('.card, .hero, .exp-item, .formation-item, .project-item');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            card.style.transition = 'all 0.2s';
+            if(card.classList && (card.classList.contains('card') || card.classList.contains('hero')))
+                card.style.boxShadow = '0 0 12px rgba(0,255,255,0.2)';
+        });
+        card.addEventListener('mouseleave', () => {
+            if(card.classList && card.classList.contains('card'))
+                card.style.boxShadow = '';
+            else if(card.classList && card.classList.contains('hero'))
+                card.style.boxShadow = '';
+        });
+    });
+    
+    // Vérification des liens : s'assurer que les attributs href sont bien actifs
+    // Le code est déjà prêt avec a href="tel:..." et mailto et LinkedIn
+    console.log("Portfolio Prince Goma | Liens actifs : téléphone (appel direct), email, LinkedIn avec nouvelle fenêtre");
+</script>
+</body>
+</html>
